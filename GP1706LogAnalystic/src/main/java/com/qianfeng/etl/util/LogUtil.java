@@ -19,7 +19,12 @@ public class LogUtil {
     /**
      * 日志解析
      *
-     * @param logText 192.168.216.1^A1256798789.123^A192.168.216.111^1.png?en=e_l&ver=1&u_ud=679f-dfsa-u789-dfaa
+     * 192.168.216.111^A1532576375.965^A192.168.216.111^A
+     * /index.html?ver=1.0&u_mid=123&en=e_cr&c_time=1532576375614&
+     * ip:192.168.216.111
+     * s_time:1532576375.965
+     * ver:1.0
+     *
      * @return
      */
 
@@ -31,10 +36,9 @@ public class LogUtil {
             if (fields.length ==4) {
                 //将字段存储到info中
                 info.put(EventLogsConstant.LOG_COLUMN_NAME_IP, fields[0]);
-                info.put(EventLogsConstant.LOG_COLUMN_NAME_SERVER_TIME, fields[1].replaceAll(".", ""));
+                info.put(EventLogsConstant.LOG_COLUMN_NAME_SERVER_TIME, fields[1].replaceAll("\\.", ""));
                 //判断是否有参数列表
-                int index = fields[3].indexOf("?");
-                if (index > 0) {
+                int index = fields[3].indexOf("?");                if (index > 0) {
                     //获取参数列表
                     String requestBody = fields[3].substring(index + 1);
                     //处理参数

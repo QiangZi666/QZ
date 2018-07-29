@@ -12,41 +12,43 @@ import org.apache.log4j.Logger;
  */
 public class IpParserUtil extends IPSeeker {
     private static final Logger logger = Logger.getLogger(IpParserUtil.class);
-   private RegionInfo info = new RegionInfo();
+    private RegionInfo info = new RegionInfo();
+
     /**
      * 解析ip的方法,返回地域信息
+     *
      * @param ip
      * @return
      */
-    public RegionInfo parserIp(String ip){
+    public RegionInfo parserIp(String ip) {
         //判断IP是否为空
-        if(StringUtils.isEmpty(ip)||StringUtils.isEmpty(ip.trim())){
+        if (StringUtils.isEmpty(ip) || StringUtils.isEmpty(ip.trim())) {
             return info;
         }
-        try{
+        try {
             String country = super.getCountry(ip);
-            if("局域网".equals(country)){
+            if ("局域网".equals(country)) {
                 info.setCountry("中国");
                 info.setProvince("北京");
-                info .setCity("昌平区");
-            }else if (country!=null&&StringUtils.isNotEmpty(country)){
+                info.setCity("昌平区");
+            } else if (country != null && StringUtils.isNotEmpty(country)) {
                 info.setCountry("中国");
                 int index = country.indexOf("省");
-                if(index>0){
-                    info.setProvince(country.substring(0,index+1));
+                if (index > 0) {
+                    info.setProvince(country.substring(0, index + 1));
                     int index2 = country.indexOf("市");
-                    if (index2>0){
-                        info.setCity(country.substring(index+1,Math.min(index2+1,country.length())));
+                    if (index2 > 0) {
+                        info.setCity(country.substring(index + 1, Math.min(index2 + 1, country.length())));
                     }
-                }else {
-                    String flag = country.substring(0,2);
-                    switch (flag){
+                } else {
+                    String flag = country.substring(0, 2);
+                    switch (flag) {
                         case "内蒙":
                             info.setProvince("内蒙古");
-                            country=country.substring(3);
-                            index=country.indexOf("市");
-                            if (index>0){
-                                info.setCity(country.substring(0,Math.min(index+1,country.length())));
+                            country = country.substring(3);
+                            index = country.indexOf("市");
+                            if (index > 0) {
+                                info.setCity(country.substring(0, Math.min(index + 1, country.length())));
                             }
                             break;
                         case "广西":
@@ -56,50 +58,50 @@ public class IpParserUtil extends IPSeeker {
                             info.setProvince(flag);
                             country = country.substring(2);
                             index = country.indexOf("市");
-                            if(index>0){
-                                info .setCity(country.substring(0,Math.min(index+1,country.length())));
+                            if (index > 0) {
+                                info.setCity(country.substring(0, Math.min(index + 1, country.length())));
                             }
                             break;
                         case "北京":
                         case "上海":
                         case "重庆":
                         case "天津":
-                            info.setProvince(flag+"市");
-                            country= country.substring(3);
-                            index=country.indexOf("区");
-                            if(index>0){
-                                char ch = country.charAt(index-1);
-                                if(ch !='小'&&ch!='校'&&ch!='军'){
-                                    info.setCity(country.substring(0,Math.min(index+1,country.length())));
+                            info.setProvince(flag + "市");
+                            country = country.substring(3);
+                            index = country.indexOf("区");
+                            if (index > 0) {
+                                char ch = country.charAt(index - 1);
+                                if (ch != '小' && ch != '校' && ch != '军') {
+                                    info.setCity(country.substring(0, Math.min(index + 1, country.length())));
 
                                 }
                             }
                             index = country.indexOf("县");
-                            if (index>0){
-                                info.setCity(country.substring(0,Math.min(index+1,country.length())));
+                            if (index > 0) {
+                                info.setCity(country.substring(0, Math.min(index + 1, country.length())));
                             }
                             break;
-                        case  "香港":
+                        case "香港":
                         case "澳门":
                         case "台湾":
-                            info.setProvince(flag+"特别行政区");
+                            info.setProvince(flag + "特别行政区");
                             break;
                         default:
                             break;
                     }
                 }
             }
-        }catch (Exception e){
-            logger.warn("解析IP工具方法异常" ,e);
+        } catch (Exception e) {
+            logger.warn("解析IP工具方法异常", e);
         }
         return info;
-        }
+    }
 
 
     /**
      * 封装地域信息
      */
-    public static class RegionInfo{
+    public static class RegionInfo {
         private final String DEFAULT_VALUE = "unknown";
         private String country = DEFAULT_VALUE;
         private String province = DEFAULT_VALUE;
